@@ -1,0 +1,47 @@
+Datubāzes shēma 
+
+
+Tabula: users
+
+Id (Primary key)
+Name
+Email
+Password
+Created_at
+Updated_at
+
+Tabula: todo_group
+
+Id
+User_id (Foreign key uz users table, lai norādītuy, kuram lietotājam pieder grupa )
+Name
+Created_at
+Updated_at
+
+Tabula: todo_lists
+
+id (Primary key)
+todo_group_id (Foreign key uz todo_groups taula, lai norādītum kurai pieder saraksta)
+name
+createds_at
+updated_at
+
+Tabula: todo_items
+
+Id {Primary key}
+Todo_list_id (Foreign key uz todo_lists tabula, lai norādītu kuram saraksta,m pieder vienums)
+Content 
+Deadline (Papildus: lauks, lai uzglabātu viebuma terminu)
+Priority (Papildu: lauks, lai norādītu vvienukma prioritait)
+Copleted (Booles lauks, lai norādītu, vai vienuma ir padeig vai nav )
+Created_at
+Update_at
+
+Tabula : shared_liets (Papildus: Tabula dališanās funkcionalitatei)
+
+Id (Primary key)
+User_id (Foreign key uz tabulu ,laib norādītu , kuram lietotājam delits saraksts)
+Todo_group_id (Foreign key uz todo_grous tabula , lai norādītu kura grupa ir kopīgota )
+Access_level (LAuks, kas norāda piekluves līmeni: “lasit” vai “lasit un labot ”)
+Created_at
+Updated_at
