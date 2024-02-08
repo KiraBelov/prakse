@@ -16,7 +16,8 @@
             </ul>
         </div>
     @endif
-   
+
+    <form method="POST" action="{{ route('login') }}">
         @csrf
         <label for="text">Name:</label><br>
         <input type="text" id="name" name="name" required><br><br>
@@ -24,9 +25,9 @@
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit">Login</button>
         <div class="register">
-                    Neesi lietotājs?
-                    <a href="/">Reģistrēties</a>
-                </div>
+            Neesi lietotājs?
+            <a href="{{ route('register') }}">Reģistrēties</a>
+        </div>
     </form>
 </body>
 </html>
