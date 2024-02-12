@@ -4,31 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-</head
->
+    <!-- Подключение шрифта -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <!-- Подключение Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        /* Стили для темной темы */
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: 'Russo One', sans-serif; /* Используем шрифт Russo One */
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 10px;
+            border: 3px solid #fff;
+            border-radius: 15px;
+            background-color: #444;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 20px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .register {
+            margin-top: 10px;
+            font-size: 30px;
+        }
+        .register a {
+            color: #007bff;
+            text-decoration: none;
+            
+        }
+        .register a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+            font-size: 4rem;
+        }
+    </style>
+</head>
 <body>
-    <h1>Login</h1>
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div id="app">
+        <h1>Login</h1>
+        <form @submit.prevent="login">
+            <label for="name">Name:</label>
+            <input type="text" id="name" v-model="formData.name" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="formData.password" required>
+            <button type="submit">Login</button>
+            <div class="register">
+                Not a user? <a href="{{ route('register') }}">Register</a>
+            </div>
+        </form>
+    </div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-        <label for="text">Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-        <div class="register">
-            Neesi lietotājs?
-            <a href="{{ route('register') }}">Reģistrēties</a>
-        </div>
-    </form>
+    <script>
+        // Инициализация Vue.js
+        new Vue({
+            el: '#app',
+            data: {
+                formData: {
+                    name: '',
+                    password: ''
+                }
+            },
+            methods: {
+                login() {
+                    // Здесь можно добавить логику для отправки данных формы на сервер
+                    console.log('Login data:', this.formData);
+                    // Для примера, отправим данные в консоль
+                }
+            }
+        });
+    </script>
 </body>
 </html>
