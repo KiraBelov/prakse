@@ -69,12 +69,13 @@
 <body>
     <div id="app">
         <h1>Login</h1>
-        <form @submit.prevent="login">
+        <form @submit.prevent="login" action="{{ route('login') }}" method="POST">
+            @csrf <!-- Добавляем CSRF-токен для защиты формы -->
             <label for="name">Name:</label>
             <input type="text" id="name" v-model="formData.name" required>
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="formData.password" required>
-            <button type="submit">Login</button>
+            <button type="submit">Login</button> <!-- Добавляем тип кнопки "submit" -->
             <div class="register">
                 Not a user? <a href="{{ route('register') }}">Register</a>
             </div>
@@ -82,7 +83,6 @@
     </div>
 
     <script>
-        // Инициализация Vue.js
         new Vue({
             el: '#app',
             data: {
@@ -102,3 +102,4 @@
     </script>
 </body>
 </html>
+     
