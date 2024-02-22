@@ -28,9 +28,10 @@
         }
         input[type="text"],
         input[type="password"],
-        button {
+        input[type="email"],
+        .emailButton {
             width: 100%;
-            padding: 20px;
+            padding: 20px; /* Увеличиваем высоту кнопки */
             margin-bottom: 10px;
             border: 3px solid #fff;
             border-radius: 15px;
@@ -39,11 +40,22 @@
             box-sizing: border-box;
             font-size: 20px;
         }
+        .emailButton {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .emailButton:hover {
+            background-color: #0056b3;
+        }
         button {
             cursor: pointer;
             background-color: #007bff;
             color: #fff;
             transition: background-color 0.3s ease;
+            padding: 25px 30px; /* Увеличиваем высоту и ширину кнопки */
+            font-size: 24px; /* Увеличиваем размер текста кнопки */
         }
         button:hover {
             background-color: #0056b3;
@@ -55,7 +67,6 @@
         .register a {
             color: #007bff;
             text-decoration: none;
-            
         }
         .register a:hover {
             text-decoration: underline;
@@ -69,12 +80,16 @@
 <body>
     <div id="app">
         <h1>Login</h1>
-        <form @submit.prevent="login" action="{{ route('login') }}" method="POST">
+        
+        <form action="{{ route('login') }}" method="POST">
             @csrf <!-- Добавляем CSRF-токен для защиты формы -->
-            <label for="name">Name:</label>
-            <input type="text" id="name" v-model="formData.name" required>
+            @if(Session::has('error'))
+            <div class="alert alert-danger bg-red-100 px-4 py-3 rounded-xl mb-4" role="alert">{{Session::get('error')}}</div>
+            @endif
+            <label for="name">Email:</label>
+            <input type="email" name="epasts" id="email" v-model="formData.name" class="emailButton" required>
             <label for="password">Password:</label>
-            <input type="password" id="password" v-model="formData.password" required>
+            <input type="password" name="parole" id="password" v-model="formData.password" required>
             <button type="submit">Login</button> <!-- Добавляем тип кнопки "submit" -->
             <div class="register">
                 Not a user? <a href="{{ route('register') }}">Register</a>
@@ -102,4 +117,5 @@
     </script>
 </body>
 </html>
+
      
