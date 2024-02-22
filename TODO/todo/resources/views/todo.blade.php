@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
     <!-- Подключение Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* Стили для темной темы */
         body {
@@ -54,10 +56,90 @@
             border-collapse: collapse; /* Убираем промежутки между ячейками */
             margin-top: 20px; /* Добавляем немного отступа сверху */
             display: none; /* Скрываем таблицу по умолчанию */
+            width: 80%; /* Увеличиваем ширину таблицы */
         }
         th, td {
             border: 1px solid #fff; /* Рамка для ячеек */
             padding: 10px; /* Отступы внутри ячеек */
+            text-align: center; /* Центрируем содержимое по горизонтали */
+        }
+        /* Стили для кнопок удаления и изменения */
+        .deleteButton, .editButton {
+            padding: 10px; /* Уменьшаем отступы */
+            border-radius: 10px;
+            font-size: 16px; /* Уменьшаем размер шрифта */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            vertical-align: middle; /* Выравниваем по вертикали */
+            display: block; /* Делаем кнопки блочными элементами */
+            margin: 0 auto; /* Центрируем кнопки по горизонтали */
+        }
+        .deleteButton {
+            background-color: #ff0000; /* Красный цвет */
+            border: 3px solid #ff0000; /* Красная рамка */
+            color: #fff; /* Белый цвет текста */
+            width: 80%; /* Увеличиваем ширину кнопки удаления */
+        }
+        .editButton {
+            background-color: #ffff00; /* Желтый цвет */
+            border: 3px solid #ffff00; /* Желтая рамка */
+            color: #000; /* Черный цвет текста */
+            width: 80%; /* Увеличиваем ширину кнопки изменения */
+        }
+        .deleteButton:hover {
+            background-color: #cc0000; /* Темнокрасный при наведении */
+            border-color: #cc0000; /* Темнокрасная рамка при наведении */
+        }
+        .editButton:hover {
+            background-color: #cccc00; /* Темножелтый при наведении */
+            border-color: #cccc00; /* Темножелтая рамка при наведении */
+        }
+        /* Стили для кнопки сохранить */
+        #saveButton {
+            display: none; /* По умолчанию скрыта */
+            margin-top: 20px; /* Отступ сверху */
+            position: fixed; /* Фиксируем позицию */
+            left: 50%; /* Размещаем по центру горизонтально */
+            transform: translateX(-50%); /* Смещаем влево на 50% от ширины кнопки */
+            bottom: 20px; /* Отступ снизу */
+        }
+
+        /* Стили для всплывающего окна */
+        #confirmationDialog {
+            display: none; /* По умолчанию скрыто */
+            position: fixed; /* Фиксируем позицию */
+            top: 50%; /* Размещаем по центру вертикально */
+            left: 50%; /* Размещаем по центру горизонтально */
+            transform: translate(-50%, -50%); /* Центрируем по обоим осям */
+            background-color: rgba(0, 0, 0, 0.5); /* Черный полупрозрачный фон */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Тень */
+            z-index: 999; /* Поверх других элементов */
+        }
+
+        #confirmationDialog h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        #confirmationDialog button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #confirmationDialog button.yes {
+            background-color: #28a745; /* Зеленый цвет */
+            color: #fff;
+        }
+
+        #confirmationDialog button.no {
+            background-color: #dc3545; /* Красный цвет */
+            color: #fff;
         }
     </style>
 </head>
@@ -84,6 +166,16 @@
         </tbody>
     </table>
 
+    <!-- Кнопка "Сохранить" -->
+    <button id="saveButton" onclick="showConfirmationDialog()">Save</button>
+
+    <!-- Всплывающее окно подтверждения -->
+    <div id="confirmationDialog">
+        <h2>Do you want to save ToDo?</h2>
+        <button class="yes" onclick="saveTodo()">Yes</button>
+        <button class="no" onclick="hideConfirmationDialog()">No</button>
+    </div>
+
     <script>
         function confirmNewTodo() {
             var createTodoButton = document.getElementById('createTodoButton');
@@ -97,6 +189,7 @@
             if (todoDescription !== '') {
                 addTodoToTable(todoDescription);
                 todoInput.value = ''; // Очистить поле ввода
+                toggleSaveButtonVisibility(); // Показать кнопку "Сохранить"
             }
         }
 
@@ -107,11 +200,35 @@
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
             cell1.textContent = description;
-            cell2.innerHTML = '<button>Delete</button>';
-            cell3.innerHTML = '<button>Edit</button>';
+            cell2.innerHTML = '<button class="deleteButton"><i class="fas fa-trash"></i></button>'; // Иконка корзины
+            cell3.innerHTML = '<button class="editButton"><i class="fas fa-edit"></i></button>'; // Иконка карандаша
             document.getElementById('todoTable').style.display = 'table'; // Показать таблицу
+        }
+
+        function toggleSaveButtonVisibility() {
+            var saveButton = document.getElementById('saveButton');
+            var todoTable = document.getElementById('todoTable');
+            if (todoTable.getElementsByTagName('tr').length > 1) { // Если в таблице есть хотя бы одна запись
+                saveButton.style.display = 'block'; // Показать кнопку "Сохранить"
+            } else {
+                saveButton.style.display = 'none'; // Скрыть кнопку "Сохранить"
+            }
+        }
+
+        function showConfirmationDialog() {
+            var dialog = document.getElementById('confirmationDialog');
+            dialog.style.display = 'block'; // Показать всплывающее окно
+        }
+
+        function hideConfirmationDialog() {
+            var dialog = document.getElementById('confirmationDialog');
+            dialog.style.display = 'none'; // Скрыть всплывающее окно
+        }
+
+        function saveTodo() {
+            // Действия по сохранению ToDo
+            hideConfirmationDialog(); // Скрыть всплывающее окно
         }
     </script>
 </body>
 </html>
-
