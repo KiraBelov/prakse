@@ -200,8 +200,8 @@
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
             cell1.textContent = description;
-            cell2.innerHTML = '<button class="deleteButton"><i class="fas fa-trash"></i></button>'; // Иконка корзины
-            cell3.innerHTML = '<button class="editButton"><i class="fas fa-edit"></i></button>'; // Иконка карандаша
+            cell2.innerHTML = '<button class="deleteButton" onclick="showDeleteConfirmation(this)"><i class="fas fa-trash"></i></button>'; // Иконка корзины
+            cell3.innerHTML = '<button class="editButton" onclick="showEditConfirmation(this)"><i class="fas fa-edit"></i></button>'; // Иконка карандаша
             document.getElementById('todoTable').style.display = 'table'; // Показать таблицу
         }
 
@@ -225,6 +225,40 @@
             dialog.style.display = 'none'; // Скрыть всплывающее окно
         }
 
+        function showDeleteConfirmation(button) {
+            var dialog = document.getElementById('confirmationDialog');
+            dialog.style.display = 'block'; // Показать всплывающее окно
+            var yesButton = document.querySelector('#confirmationDialog button.yes');
+            yesButton.onclick = function() {
+                deleteTodo(button);
+            };
+        }
+
+        function showEditConfirmation(button) {
+            var dialog = document.getElementById('confirmationDialog');
+            dialog.style.display = 'block'; // Показать всплывающее окно
+            var yesButton = document.querySelector('#confirmationDialog button.yes');
+            yesButton.onclick = function() {
+                editTodo(button);
+            };
+        }
+
+        function deleteTodo(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            toggleSaveButtonVisibility(); // Проверить видимость кнопки "Сохранить"
+            hideConfirmationDialog(); // Скрыть всплывающее окно
+        }
+
+        function editTodo(button) {
+            var row = button.parentNode.parentNode;
+            var newDescription = prompt('Enter new description:');
+            if (newDescription !== null) {
+                row.cells[0].textContent = newDescription;
+                hideConfirmationDialog(); // Скрыть всплывающее окно
+            }
+        }
+
         function saveTodo() {
             // Действия по сохранению ToDo
             hideConfirmationDialog(); // Скрыть всплывающее окно
@@ -232,3 +266,4 @@
     </script>
 </body>
 </html>
+
