@@ -58,17 +58,19 @@
 <body>
     <div id="app">
         <h1>Registration</h1>
-        <form @submit.prevent="register">
-            <label for="name">Name:</label>
-            <input type="text" id="name" v-model="formData.name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="formData.email" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="formData.password" required>
-            <label for="password_confirmation">Confirm Password:</label>
-            <input type="password" id="password_confirmation" v-model="formData.password_confirmation" required>
-            <button type="submit">Register</button>
-        </form>
+        <form method="POST" action="{{ route('register') }}">
+    @csrf
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <label for="password_confirmation">Confirm Password:</label>
+    <input type="password" id="password_confirmation" name="password_confirmation" required>
+    <button type="submit">Register</button>
+</form>
+
     </div>
 
     <script>
